@@ -75,7 +75,7 @@ Under the hood, the vault allocates across:
 
 The vault rebalances automatically. The agent holds one token. That token earns yield, is composable as collateral, and is redeemable at any time with sub-second settlement.
 
-Key difference from existing yield aggregators: Arcis vaults expose a standardized Agent Treasury Interface (ATI) that any agent framework (elizaOS, LangChain, CrewAI, Lobstack) can call with three functions: `deposit()`, `withdraw()`, `balance()`. No bespoke integration. No UI. No human in the loop.
+Key difference from existing yield aggregators: Arcis vaults expose a standardized Agent Treasury Interface (ATI) that any agent framework (elizaOS, LangChain, CrewAI, AutoGPT) can call with three functions: `deposit()`, `withdraw()`, `balance()`. No bespoke integration. No UI. No human in the loop.
 
 ### Layer 2: Agent Credit
 
@@ -274,14 +274,6 @@ Three forces are converging in mid-2026:
 3. **The narrative gap.** RWA is a proven institutional narrative. AI agents are the dominant crypto narrative of 2026. Nobody has cleanly bridged the two. Arcis sits at the exact intersection.
 
 The window is 6-12 months before someone else connects these dots.
-
----
-
-## Lobstack Synergy
-
-Arcis can be built as a standalone protocol or as a product line within the Lobstack ecosystem. Lobstack already provides agent infrastructure with isolated VMs, persistent memory, and 700+ integrations. Adding financial infrastructure (vaults, credit, bonds) to the Lobstack stack creates a full-stack agent platform: compute, memory, integrations, and now capital.
-
-Agents deployed on Lobstack would have native access to Arcis vaults. The ATI interface ships as a Lobstack integration. This is a distribution advantage no standalone DeFi protocol can match.
 
 ---
 

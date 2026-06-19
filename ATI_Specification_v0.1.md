@@ -134,7 +134,7 @@ pub enum ATIError {
 
 ```typescript
 // @arcis/sdk - Agent Treasury Interface SDK
-// For elizaOS, LangChain, CrewAI, Lobstack, and any agent framework
+// For elizaOS, LangChain, CrewAI, AutoGPT, and any agent framework
 
 interface ATIConfig {
   chain: 'base' | 'solana';
