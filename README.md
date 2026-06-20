@@ -36,7 +36,7 @@ Financial infrastructure for autonomous AI agents — yield-bearing vaults, iden
 | Repo | Description | Status |
 |---|---|---|
 | [`core`](https://github.com/Arcis-Protocol/core) | Smart contracts — Foundry, 24 contracts, 90 tests | ✓ Deployed |
-| [`sdk`](https://github.com/Arcis-Protocol/sdk) | TypeScript SDK — `@arcisprotocol/sdk`, viem-based, 43 tests | ✓ Complete |
+| [`sdk`](https://github.com/Arcis-Protocol/sdk) | TypeScript SDK — `@arcisprotocol/sdk`, vault + credit + bonds | ✓ Complete |
 | [`cli`](https://github.com/Arcis-Protocol/cli) | Terminal interface — TUI for vault operations | ✓ Complete |
 | [`mcp`](https://github.com/Arcis-Protocol/mcp) | MCP Server — connect any AI agent in one tool call | ✓ Complete |
 | [`app`](https://github.com/Arcis-Protocol/app) | Landing page + dashboard — arcis.money | ✓ Live |
