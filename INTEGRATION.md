@@ -55,12 +55,12 @@ await client.writeContract({ address: VAULT, abi,
 
 ---
 
-## Using @arcis/sdk
+## Using @arcisprotocol/sdk
 
 Handles approvals, previews, and formatting automatically.
 
 ```typescript
-import { Arcis, parseUSDC, formatUSDC, BASE_SEPOLIA_CONFIG } from "@arcis/sdk";
+import { Arcis, parseUSDC, formatUSDC, BASE_SEPOLIA_CONFIG } from "@arcisprotocol/sdk";
 import { createPublicClient, createWalletClient, http } from "viem";
 import { baseSepolia } from "viem/chains";
 import { privateKeyToAccount } from "viem/accounts";
@@ -174,7 +174,7 @@ Add Arcis as a plugin action in your elizaOS agent.
 import { Action, IAgentRuntime } from "@ai16z/eliza";
 import { createPublicClient, createWalletClient, http } from "viem";
 import { baseSepolia } from "viem/chains";
-import { Arcis, parseUSDC, formatUSDC, BASE_SEPOLIA_CONFIG } from "@arcis/sdk";
+import { Arcis, parseUSDC, formatUSDC, BASE_SEPOLIA_CONFIG } from "@arcisprotocol/sdk";
 
 export const arcisDeposit: Action = {
   name: "ARCIS_DEPOSIT",
