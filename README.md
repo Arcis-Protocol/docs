@@ -1,5 +1,4 @@
 <p align="center">
-| [`mcp`](https://github.com/Arcis-Protocol/mcp) | MCP Server — any AI agent connects in one tool call | ✓ Complete |
   <br />
   <strong>A R C I S &nbsp; P R O T O C O L</strong>
   <br />
@@ -39,6 +38,7 @@ Financial infrastructure for autonomous AI agents — yield-bearing vaults, iden
 | [`core`](https://github.com/Arcis-Protocol/core) | Smart contracts — Foundry, 24 contracts, 58 tests | ✓ Deployed |
 | [`sdk`](https://github.com/Arcis-Protocol/sdk) | TypeScript SDK — `@arcis/sdk`, viem-based, 43 tests | ✓ Complete |
 | [`cli`](https://github.com/Arcis-Protocol/cli) | Terminal interface — TUI for vault operations | ✓ Complete |
+| [`mcp`](https://github.com/Arcis-Protocol/mcp) | MCP Server — connect any AI agent in one tool call | ✓ Complete |
 | [`app`](https://github.com/Arcis-Protocol/app) | Landing page + dashboard — arcis.money | ✓ Live |
 | [`docs`](https://github.com/Arcis-Protocol/docs) | Protocol documentation (this repo) | ✓ Current |
 
