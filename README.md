@@ -43,6 +43,7 @@ Financial infrastructure for autonomous AI agents — yield-bearing vaults, iden
 | [`app`](https://github.com/Arcis-Protocol/app) | Landing page + dashboard — arcis.money | ✓ Live |
 | [`docs`](https://github.com/Arcis-Protocol/docs) | Protocol documentation (this repo) | ✓ Current |
 | [`monitor`](https://github.com/Arcis-Protocol/monitor) | On-chain monitoring + Telegram alerts | ✓ Complete |
+| [`custos`](https://github.com/Arcis-Protocol/custos) | CUSTOS — autonomous keeper agent |
 
 ## Quick Start
 
