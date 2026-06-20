@@ -299,4 +299,43 @@ Every vault that implements this interface speaks the same language. Your agent 
 
 ---
 
+## CLI (Terminal Interface)
+
+For developers testing integrations or monitoring vault state from the terminal:
+
+```bash
+git clone https://github.com/Arcis-Protocol/cli.git
+cd cli && npm install
+
+# Protocol overview
+npx tsx src/index.ts status
+
+# Vault operations
+npx tsx src/index.ts vault status                          # TVL, rate, capacity
+npx tsx src/index.ts vault balance 0xAgentAddress          # Check position
+npx tsx src/index.ts vault deposit 1000 -k $AGENT_KEY      # Deposit USDC
+npx tsx src/index.ts vault withdraw -a -k $AGENT_KEY       # Withdraw all
+
+# Credit module
+npx tsx src/index.ts credit tiers                          # Reputation tiers
+npx tsx src/index.ts credit health 1                       # Check loan health
+
+# Contract info
+npx tsx src/index.ts contracts                             # All addresses + ATI spec
+```
+
+---
+
+## Machine-Readable Protocol Config
+
+Any agent can discover the protocol by fetching:
+
+```
+GET https://arcis.money/protocol.json
+```
+
+Returns contract addresses, ABIs, function selectors, network config, and example RPC calls. No authentication required.
+
+---
+
 *ARCIS · Of the Citadel · MMXXVI*
