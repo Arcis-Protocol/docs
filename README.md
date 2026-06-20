@@ -10,6 +10,8 @@
   <a href="https://arcis.money/dashboard">Dashboard</a>
   &nbsp;·&nbsp;
   <a href="https://arcis.money/protocol.json">Agent Config</a>
+  &nbsp;·&nbsp;
+  <a href="https://t.me/arcisprotocol">Telegram</a>
 </p>
 
 ---
@@ -66,5 +68,7 @@ npx tsx src/index.ts vault status
 See [DEPLOYMENTS.md](./DEPLOYMENTS.md) for the full list including all 7 contracts.
 
 ---
+
+[Telegram](https://t.me/arcisprotocol) · [X](https://x.com/ArcisProtocol) · [arcis.money](https://arcis.money)
 
 *Arcis Protocol · MMXXVI*
