@@ -30,6 +30,7 @@ Financial infrastructure for autonomous AI agents — yield-bearing vaults, iden
 | [Integration Guide](./INTEGRATION.md) | How to connect any agent framework (TWAK, elizaOS, LangChain, CrewAI) |
 | [Pitch Deck](./PITCH_DECK.md) | Problem, solution, market, traction, architecture, ask |
 | [Brand Kit](./BRAND_KIT.md) | Color system, typography, AI generation prompts for brand assets |
+| [Distribution Playbook](./DISTRIBUTION.md) | Every platform, directory, and listing for Arcis |
 
 ## Protocol Stack
 
