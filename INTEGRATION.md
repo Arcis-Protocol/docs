@@ -1,341 +1,328 @@
-# Arcis Protocol — Agent Integration Guide
+# ATI Integration Guide
 
-Three functions. Any framework. One interface.
+## Agent Treasury Interface v1.1
 
+The ATI is an open interface standard. Any agent framework that can call a smart contract can use it. Three core functions, two discovery views.
+
+```solidity
+interface IAgentTreasury {
+    // Core operations
+    function deposit(uint256 amount) external returns (uint256 shares);
+    function withdraw(uint256 shares) external returns (uint256 amount);
+    function balance(address agent)  external view returns (uint256);
+
+    // Discovery views (v1.1)
+    function asset()                 external view returns (address);
+    function totalAssets()           external view returns (uint256);
+    function maxDeposit(address)     external view returns (uint256);
+}
 ```
-deposit(uint256 amount)  → uint256 shares
-withdraw(uint256 shares) → uint256 amount
-balance(address agent)   → uint256 value
-```
 
-Every example below does the same thing: deposit idle USDC into a yield-bearing vault, check the position, withdraw when needed. The ATI doesn't care what framework your agent runs on.
+**Discovery flow for any agent:**
+
+1. Call `asset()` → get the deposit token address (USDC)
+2. Call `maxDeposit(myAddress)` → check remaining capacity
+3. Approve the vault to spend your USDC
+4. Call `deposit(amount)` → receive yield-bearing shares
+
+No dashboard. No wallet connect. No human in the loop.
 
 ---
 
-## Quick Start (Raw viem)
+## Quick Start (Raw RPC)
 
-The minimal integration. Works with any agent that has a private key.
+Any agent with HTTP access can interact with the ATI using JSON-RPC. No SDK required.
 
-```typescript
-import { createPublicClient, createWalletClient, http, parseAbi } from "viem";
-import { base } from "viem/chains";
-import { privateKeyToAccount } from "viem/accounts";
+```bash
+# Check vault health
+cast call 0xa8eF658E125C7f6D7aFa9B6b8035b66b32CBE98d "totalAssets()" --rpc-url https://sepolia.base.org
 
-const account = privateKeyToAccount(process.env.AGENT_KEY);
-const client = createWalletClient({ chain: base, transport: http(), account });
-const read = createPublicClient({ chain: base, transport: http() });
+# Discover the deposit token
+cast call 0xa8eF658E125C7f6D7aFa9B6b8035b66b32CBE98d "asset()" --rpc-url https://sepolia.base.org
 
-const VAULT = "0xa8eF658E125C7f6D7aFa9B6b8035b66b32CBE98d"; // Base Sepolia
-const USDC  = "0x29440A12f15fe6bDf5F624f4eeEB298CCb782f05";
+# Check capacity
+cast call 0xa8eF658E125C7f6D7aFa9B6b8035b66b32CBE98d "maxDeposit(address)" 0xYourAgent --rpc-url https://sepolia.base.org
 
-const abi = parseAbi([
-  "function deposit(uint256 amount) returns (uint256 shares)",
-  "function withdraw(uint256 shares) returns (uint256 amount)",
-  "function balance(address agent) view returns (uint256)",
-  "function approve(address spender, uint256 amount) returns (bool)",
-]);
-
-// 1. Approve (once)
-await client.writeContract({ address: USDC, abi, functionName: "approve",
-  args: [VAULT, 2n ** 256n - 1n] });
-
-// 2. Deposit 1000 USDC
-const shares = await client.writeContract({ address: VAULT, abi,
-  functionName: "deposit", args: [1000_000000n] });
-
-// 3. Check position
-const value = await read.readContract({ address: VAULT, abi,
-  functionName: "balance", args: [account.address] });
-console.log(`Position: ${Number(value) / 1e6} USDC`);
-
-// 4. Withdraw all
-await client.writeContract({ address: VAULT, abi,
-  functionName: "withdraw", args: [shares] });
+# Deposit 1000 USDC (after approval)
+cast send 0xa8eF658E125C7f6D7aFa9B6b8035b66b32CBE98d "deposit(uint256)" 1000000000 --private-key $KEY --rpc-url https://sepolia.base.org
 ```
 
 ---
 
-## Using @arcisprotocol/sdk
+## Framework Integrations
 
-Handles approvals, previews, and formatting automatically.
+### Arcis SDK (TypeScript / Node.js)
+
+The native TypeScript SDK. Works with any framework that runs JavaScript.
+
+```bash
+npm install @arcisprotocol/sdk viem
+```
 
 ```typescript
-import { Arcis, parseUSDC, formatUSDC, BASE_SEPOLIA_CONFIG } from "@arcisprotocol/sdk";
+import { Arcis, parseUSDC, formatUSDC } from "@arcisprotocol/sdk";
 import { createPublicClient, createWalletClient, http } from "viem";
 import { baseSepolia } from "viem/chains";
 import { privateKeyToAccount } from "viem/accounts";
 
-const account = privateKeyToAccount(process.env.AGENT_KEY);
+const account = privateKeyToAccount("0x...");
 const pub = createPublicClient({ chain: baseSepolia, transport: http() });
-const wal = createWalletClient({ chain: baseSepolia, transport: http(), account });
+const wall = createWalletClient({ chain: baseSepolia, transport: http(), account });
 
-const arcis = new Arcis(pub, wal, BASE_SEPOLIA_CONFIG);
+const arcis = new Arcis(pub, wall);
 
-// Deposit — approval handled automatically
-const { shares } = await arcis.vault.deposit(parseUSDC("1000"));
-
-// Check position
+// ATI: three functions
+await arcis.vault.deposit(parseUSDC("1000"));
 const value = await arcis.vault.balance(account.address);
-console.log(formatUSDC(value)); // "$1,000.00"
-
-// Check vault state
-const state = await arcis.vault.state();
-console.log(`TVL: ${formatUSDC(state.totalAssets)}`);
-
-// Withdraw
 await arcis.vault.withdraw(shares);
 ```
 
+→ [SDK Repository](https://github.com/Arcis-Protocol/sdk) · [npm](https://www.npmjs.com/package/@arcisprotocol/sdk)
+
 ---
 
-## Trust Wallet Agent Kit (TWAK)
+### Arcis MCP Server (Claude / Any LLM)
 
-TWAK agents execute transactions through Trust Wallet infrastructure. Use **Agent Wallet mode** for autonomous operation.
+Connect Claude, ChatGPT, or any MCP-compatible AI to Arcis in one tool call.
 
-```typescript
-import { TrustWalletAgentKit } from "@anthropic/trust-wallet-agent-kit";
-
-const agent = new TrustWalletAgentKit({
-  privateKey: process.env.AGENT_KEY,
-  chain: "base",
-});
-
-const VAULT = "0xa8eF658E125C7f6D7aFa9B6b8035b66b32CBE98d";
-const USDC  = "0x29440A12f15fe6bDf5F624f4eeEB298CCb782f05";
-
-// Approve USDC for vault
-await agent.executeTransaction({
-  to: USDC,
-  data: encodeFunctionData({
-    abi: ["function approve(address,uint256)"],
-    functionName: "approve",
-    args: [VAULT, "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"],
-  }),
-});
-
-// Deposit into Arcis
-await agent.executeTransaction({
-  to: VAULT,
-  data: encodeFunctionData({
-    abi: ["function deposit(uint256) returns (uint256)"],
-    functionName: "deposit",
-    args: ["1000000000"], // 1000 USDC
-  }),
-});
+**Local (Claude Desktop / Claude Code):**
+```json
+{
+  "mcpServers": {
+    "arcis": { "command": "npx", "args": ["@arcisprotocol/mcp"] }
+  }
+}
 ```
 
-TWAK's WalletConnect mode also works — the agent proposes the `deposit()` transaction and the user approves via Trust Wallet.
+**Remote (Claude.ai Custom Connector):**
+```bash
+PORT=3001 node dist/remote.js
+# Then paste the URL in Claude.ai → Settings → Connectors → Add Custom Connector
+```
+
+→ [MCP Repository](https://github.com/Arcis-Protocol/mcp) · [npm](https://www.npmjs.com/package/@arcisprotocol/mcp)
 
 ---
 
-## Coinbase Agentic Wallets (CDP)
+### ElizaOS
 
-Coinbase Developer Platform agentic wallets on Base have native USDC access.
+[ElizaOS](https://elizaos.ai) is the TypeScript framework for autonomous AI agents. Arcis integrates via the EVM plugin system.
 
 ```typescript
-import { CoinbaseAgenticWallet } from "@coinbase/agentkit";
+// character.json
+{
+  "name": "TreasuryAgent",
+  "plugins": ["@elizaos/plugin-evm"],
+  "settings": {
+    "chains": { "base": { "rpcUrl": "https://mainnet.base.org" } }
+  }
+}
+```
 
-const wallet = await CoinbaseAgenticWallet.create({
-  network: "base-sepolia",
-});
+```typescript
+// actions/arcis-deposit.ts
+import { parseUSDC } from "@arcisprotocol/sdk";
 
 const VAULT = "0xa8eF658E125C7f6D7aFa9B6b8035b66b32CBE98d";
 
-// Approve + Deposit in one flow
-await wallet.invokeContract({
-  contractAddress: "0x29440A12f15fe6bDf5F624f4eeEB298CCb782f05",
-  method: "approve",
-  args: { spender: VAULT, amount: "1000000000" },
-});
-
-await wallet.invokeContract({
-  contractAddress: VAULT,
-  method: "deposit",
-  args: { amount: "1000000000" },
-});
-
-// Read position
-const balance = await wallet.readContract({
-  contractAddress: VAULT,
-  method: "balance",
-  args: { agent: wallet.address },
-});
-console.log(`Position: ${balance} USDC (raw)`);
-```
-
----
-
-## elizaOS
-
-Add Arcis as a plugin action in your elizaOS agent.
-
-```typescript
-// plugins/arcis/deposit.ts
-import { Action, IAgentRuntime } from "@ai16z/eliza";
-import { createPublicClient, createWalletClient, http } from "viem";
-import { baseSepolia } from "viem/chains";
-import { Arcis, parseUSDC, formatUSDC, BASE_SEPOLIA_CONFIG } from "@arcisprotocol/sdk";
-
-export const arcisDeposit: Action = {
+export const arcisDeposit = {
   name: "ARCIS_DEPOSIT",
-  description: "Deposit idle USDC into Arcis yield vault",
+  description: "Deposit idle USDC into Arcis vault for yield",
+  handler: async (runtime, message, state) => {
+    const wallet = await runtime.getWalletClient("base");
+    const amount = parseUSDC(message.content.amount);
 
-  async handler(runtime: IAgentRuntime, message, state) {
-    const amount = extractAmount(message.content); // your parsing logic
-    const wallet = getAgentWallet(runtime); // your wallet setup
+    // ATI: deposit
+    const tx = await wallet.writeContract({
+      address: VAULT,
+      abi: [{ name: "deposit", type: "function", inputs: [{ type: "uint256" }], outputs: [{ type: "uint256" }], stateMutability: "nonpayable" }],
+      functionName: "deposit",
+      args: [amount],
+    });
 
-    const pub = createPublicClient({ chain: baseSepolia, transport: http() });
-    const wal = createWalletClient({ chain: baseSepolia, transport: http(), account: wallet });
-    const arcis = new Arcis(pub, wal, BASE_SEPOLIA_CONFIG);
-
-    const { shares, txHash } = await arcis.vault.deposit(parseUSDC(amount));
-    const value = await arcis.vault.balance(wallet.address);
-
-    return `Deposited ${amount} USDC into Arcis vault.\n` +
-           `Received ${shares} raUSDC shares.\n` +
-           `Position value: ${formatUSDC(value)}\n` +
-           `TX: ${txHash}`;
+    return { success: true, txHash: tx };
   },
 };
 ```
 
+→ [ElizaOS Docs](https://docs.elizaos.ai) · [EVM Plugin](https://github.com/elizaos-plugins/plugin-evm)
+
 ---
 
-## LangChain / LangGraph
+### LangChain / LangGraph
 
-Use as a tool in your LangChain agent.
+[LangChain](https://langchain.com) agents can call the ATI via a custom tool using web3.py or viem.
 
 ```python
-# Python agent using web3.py for the contract calls
 from langchain.tools import tool
 from web3 import Web3
 
 w3 = Web3(Web3.HTTPProvider("https://sepolia.base.org"))
 VAULT = "0xa8eF658E125C7f6D7aFa9B6b8035b66b32CBE98d"
 
-VAULT_ABI = [
-    {"name": "deposit", "type": "function", "inputs": [{"name": "amount", "type": "uint256"}],
-     "outputs": [{"name": "shares", "type": "uint256"}], "stateMutability": "nonpayable"},
-    {"name": "withdraw", "type": "function", "inputs": [{"name": "shares", "type": "uint256"}],
-     "outputs": [{"name": "amount", "type": "uint256"}], "stateMutability": "nonpayable"},
-    {"name": "balance", "type": "function", "inputs": [{"name": "agent", "type": "address"}],
-     "outputs": [{"type": "uint256"}], "stateMutability": "view"},
+ATI_ABI = [
+    {"name": "deposit",     "type": "function", "inputs": [{"type": "uint256"}], "outputs": [{"type": "uint256"}], "stateMutability": "nonpayable"},
+    {"name": "balance",     "type": "function", "inputs": [{"type": "address"}], "outputs": [{"type": "uint256"}], "stateMutability": "view"},
+    {"name": "totalAssets", "type": "function", "inputs": [],                    "outputs": [{"type": "uint256"}], "stateMutability": "view"},
+    {"name": "asset",       "type": "function", "inputs": [],                    "outputs": [{"type": "address"}], "stateMutability": "view"},
+    {"name": "maxDeposit",  "type": "function", "inputs": [{"type": "address"}], "outputs": [{"type": "uint256"}], "stateMutability": "view"},
 ]
 
-vault = w3.eth.contract(address=VAULT, abi=VAULT_ABI)
+vault = w3.eth.contract(address=VAULT, abi=ATI_ABI)
+
+@tool
+def arcis_vault_status() -> str:
+    """Check Arcis vault TVL, deposit token, and remaining capacity."""
+    tvl = vault.functions.totalAssets().call()
+    token = vault.functions.asset().call()
+    return f"TVL: ${tvl / 1e6:,.2f} USDC | Token: {token}"
 
 @tool
 def arcis_deposit(amount_usdc: float) -> str:
-    """Deposit USDC into Arcis yield vault. Returns shares received."""
-    amount_raw = int(amount_usdc * 1e6)
-    tx = vault.functions.deposit(amount_raw).build_transaction({...})
-    # sign and send tx
-    return f"Deposited {amount_usdc} USDC"
+    """Deposit USDC into Arcis vault for yield. Amount in whole USDC."""
+    raw = int(amount_usdc * 1e6)
+    cap = vault.functions.maxDeposit(agent_address).call()
+    if raw > cap:
+        return f"Exceeds capacity. Max deposit: ${cap / 1e6:,.2f}"
+    # Execute deposit (requires signed transaction)
+    tx = vault.functions.deposit(raw).build_transaction({...})
+    return f"Deposited ${amount_usdc:,.2f} USDC"
 
 @tool
-def arcis_balance(agent_address: str) -> str:
+def arcis_balance(agent: str) -> str:
     """Check an agent's position value in the Arcis vault."""
-    value = vault.functions.balance(agent_address).call()
-    return f"Position: {value / 1e6:.2f} USDC"
-
-@tool
-def arcis_withdraw(shares: int) -> str:
-    """Withdraw USDC from Arcis vault by redeeming raUSDC shares."""
-    tx = vault.functions.withdraw(shares).build_transaction({...})
-    return f"Withdrew {shares} shares"
+    value = vault.functions.balance(agent).call()
+    return f"Position: ${value / 1e6:,.2f} USDC"
 ```
+
+→ [LangChain Docs](https://docs.langchain.com) · [LangGraph](https://langchain-ai.github.io/langgraph/)
 
 ---
 
-## CrewAI
+### CrewAI
+
+[CrewAI](https://crewai.com) agents can use the ATI as a tool in role-based crews.
 
 ```python
 from crewai import Agent, Task, Crew
 from crewai_tools import tool
 
-@tool("Arcis Deposit")
-def arcis_deposit(amount_usdc: float) -> str:
-    """Deposit USDC into the Arcis yield vault on Base."""
-    # Same web3.py logic as LangChain example above
-    return f"Deposited {amount_usdc} USDC into Arcis vault"
+@tool("Arcis Vault Deposit")
+def deposit_to_arcis(amount: float) -> str:
+    """Deposit USDC into Arcis Protocol vault for yield."""
+    # Uses the same web3 pattern as LangChain
+    return f"Deposited {amount} USDC into Arcis vault"
+
+@tool("Arcis Vault Status")
+def check_arcis_vault() -> str:
+    """Check Arcis vault TVL and available capacity."""
+    return f"TVL: $11,250 | Capacity: $9,988,750"
 
 treasury_agent = Agent(
     role="Treasury Manager",
-    goal="Maximize yield on idle USDC by depositing into Arcis vaults",
-    backstory="You manage the treasury for an autonomous agent collective.",
-    tools=[arcis_deposit, arcis_balance, arcis_withdraw],
+    goal="Maximize yield on idle USDC using Arcis Protocol",
+    tools=[deposit_to_arcis, check_arcis_vault],
 )
+
+crew = Crew(agents=[treasury_agent], tasks=[
+    Task(description="Check vault status and deposit idle USDC", agent=treasury_agent)
+])
 ```
+
+→ [CrewAI Docs](https://docs.crewai.com)
 
 ---
 
-## Contract Addresses
+### OpenAI Agents SDK
 
-### Base Sepolia (Testnet)
+```python
+from openai import Agent, tool
+
+@tool
+def arcis_deposit(amount_usdc: float) -> str:
+    """Deposit USDC into Arcis Protocol vault for yield."""
+    # web3 transaction logic
+    return f"Deposited {amount_usdc} USDC"
+
+agent = Agent(
+    name="Treasury Agent",
+    instructions="You manage treasury capital using Arcis Protocol.",
+    tools=[arcis_deposit],
+)
+```
+
+→ [OpenAI Agents SDK](https://platform.openai.com/docs/guides/agents)
+
+---
+
+### Claude Agent SDK
+
+```typescript
+import Anthropic from "@anthropic-ai/sdk";
+
+const client = new Anthropic();
+
+const tools = [{
+  name: "arcis_deposit",
+  description: "Deposit USDC into Arcis vault for yield",
+  input_schema: {
+    type: "object",
+    properties: { amount: { type: "number", description: "USDC amount" } },
+    required: ["amount"],
+  },
+}];
+
+const response = await client.messages.create({
+  model: "claude-sonnet-4-6",
+  tools,
+  messages: [{ role: "user", content: "Deposit 1000 USDC into Arcis" }],
+});
+```
+
+→ [Claude Agent SDK](https://docs.anthropic.com/en/docs/agents)
+
+---
+
+## Protocol Config for Agents
+
+Agents can fetch the full protocol config at runtime:
+
+```
+GET https://arcis.money/protocol.json
+```
+
+Returns contract addresses, ABIs, function selectors, and example RPC calls. No hardcoding required.
+
+---
+
+## Deployed Contracts (Base Sepolia)
+
 | Contract | Address |
 |---|---|
 | ArcisVault (raUSDC) | `0xa8eF658E125C7f6D7aFa9B6b8035b66b32CBE98d` |
 | AgentCredit | `0x019540E33a0292a9DDE36bD9Ef11774d5A1Ce6FC` |
 | ATIRouter | `0x0281e7D37683c585325004F84e0b94170c78d5B4` |
 | MockUSDC | `0x29440A12f15fe6bDf5F624f4eeEB298CCb782f05` |
-| RPC | `https://sepolia.base.org` |
-
-### Base Mainnet
-Coming soon. Join the waitlist at [arcis.money](https://arcis.money).
 
 ---
 
-## ATI Interface (Solidity)
+## Compatible Frameworks
 
-```solidity
-interface IAgentTreasury {
-    function deposit(uint256 amount) external returns (uint256 shares);
-    function withdraw(uint256 shares) external returns (uint256 amount);
-    function balance(address agent) external view returns (uint256);
-}
-```
+| Framework | Language | Integration Path | Status |
+|---|---|---|---|
+| [Arcis SDK](https://github.com/Arcis-Protocol/sdk) | TypeScript | Native SDK | ✓ Ready |
+| [Arcis MCP](https://github.com/Arcis-Protocol/mcp) | Any LLM | MCP Server | ✓ Ready |
+| [ElizaOS](https://elizaos.ai) | TypeScript | EVM Plugin + ATI | ✓ Example above |
+| [LangChain](https://langchain.com) | Python/JS | Custom Tool | ✓ Example above |
+| [LangGraph](https://langchain-ai.github.io/langgraph/) | Python/JS | Tool Node | ✓ Via LangChain |
+| [CrewAI](https://crewai.com) | Python | @tool decorator | ✓ Example above |
+| [OpenAI Agents](https://platform.openai.com/docs/guides/agents) | Python | Function tool | ✓ Example above |
+| [Claude Agent SDK](https://docs.anthropic.com/en/docs/agents) | TypeScript | Tool use | ✓ Example above |
+| [AutoGPT](https://github.com/Significant-Gravitas/AutoGPT) | Python | Plugin system | Compatible |
+| [Semantic Kernel](https://github.com/microsoft/semantic-kernel) | C#/Python | Plugin | Compatible |
 
-Every vault that implements this interface speaks the same language. Your agent integrates once and works with any ATI-compliant vault.
-
----
-
-## CLI (Terminal Interface)
-
-For developers testing integrations or monitoring vault state from the terminal:
-
-```bash
-git clone https://github.com/Arcis-Protocol/cli.git
-cd cli && npm install
-
-# Protocol overview
-npx tsx src/index.ts status
-
-# Vault operations
-npx tsx src/index.ts vault status                          # TVL, rate, capacity
-npx tsx src/index.ts vault balance 0xAgentAddress          # Check position
-npx tsx src/index.ts vault deposit 1000 -k $AGENT_KEY      # Deposit USDC
-npx tsx src/index.ts vault withdraw -a -k $AGENT_KEY       # Withdraw all
-
-# Credit module
-npx tsx src/index.ts credit tiers                          # Reputation tiers
-npx tsx src/index.ts credit health 1                       # Check loan health
-
-# Contract info
-npx tsx src/index.ts contracts                             # All addresses + ATI spec
-```
+The ATI is chain-agnostic. Any framework that can sign and send EVM transactions can integrate.
 
 ---
 
-## Machine-Readable Protocol Config
-
-Any agent can discover the protocol by fetching:
-
-```
-GET https://arcis.money/protocol.json
-```
-
-Returns contract addresses, ABIs, function selectors, network config, and example RPC calls. No authentication required.
-
----
-
-*ARCIS · Of the Citadel · MMXXVI*
+*ARCIS · The citadel has no gatekeepers · MMXXVI*

@@ -23,7 +23,7 @@ Financial infrastructure for autonomous AI agents — yield-bearing vaults, iden
 | Document | Description |
 |---|---|
 | [Positioning](./Arcis_Positioning_Doc.md) | Market analysis, competitive landscape, product thesis |
-| [ATI Specification v0.1](./ATI_Specification_v0.1.md) | The Agent Treasury Interface standard — `deposit()`, `withdraw()`, `balance()` |
+| [ATI Specification v1.1](./ATI_Specification_v1.1.md) | The Agent Treasury Interface standard — `deposit()`, `withdraw()`, `balance()` |
 | [Architecture](./ARCHITECTURE.md) | Contract architecture, deployment order, security model |
 | [Deployments](./DEPLOYMENTS.md) | All deployed contract addresses with explorer links |
 | [Security](./SECURITY.md) | Slither static analysis report and audit status |
