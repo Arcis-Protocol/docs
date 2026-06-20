@@ -326,3 +326,22 @@ The ATI is chain-agnostic. Any framework that can sign and send EVM transactions
 ---
 
 *ARCIS · The citadel has no gatekeepers · MMXXVI*
+
+---
+
+## CUSTOS — Protocol Keeper Agent
+
+CUSTOS is Arcis's autonomous keeper agent. It runs the maintenance operations that keep the protocol healthy — harvesting yield, scanning loans, servicing bonds.
+
+Every DeFi protocol needs a keeper. CUSTOS is Arcis's.
+
+```bash
+# Run CUSTOS in monitoring mode
+git clone https://github.com/Arcis-Protocol/custos.git
+cd custos && npm install && npx tsx src/index.ts
+```
+
+CUSTOS operates through the same ATI and contract interfaces that any external agent would. If CUSTOS can run the protocol autonomously, any agent framework can.
+
+→ [CUSTOS Repository](https://github.com/Arcis-Protocol/custos)
+
