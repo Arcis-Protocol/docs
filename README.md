@@ -1,78 +1,51 @@
-<p align="center">
-  <br />
-  <strong>A R C I S &nbsp; P R O T O C O L</strong>
-  <br />
-  <em>Documentation</em>
-  <br />
-  <br />
-  <a href="https://arcis.money">arcis.money</a>
-  &nbsp;·&nbsp;
-  <a href="https://arcis.money/dashboard">Dashboard</a>
-  &nbsp;·&nbsp;
-  <a href="https://arcis.money/protocol.json">Agent Config</a>
-  &nbsp;·&nbsp;
-  <a href="https://t.me/arcisprotocol">Telegram</a>
-</p>
+# Arcis Protocol — Documentation
 
----
-
-Financial infrastructure for autonomous AI agents — yield-bearing vaults, identity-aware credit, and revenue bonds. Deployed on Base.
+Specifications, integration guides, and SDK examples for Arcis Protocol.
 
 ## Contents
 
 | Document | Description |
 |---|---|
-| [Positioning](./Arcis_Positioning_Doc.md) | Market analysis, competitive landscape, product thesis |
-| [ATI Specification v1.1](./ATI_Specification_v1.1.md) | The Agent Treasury Interface standard — `deposit()`, `withdraw()`, `balance()` |
-| [Architecture](./ARCHITECTURE.md) | Contract architecture, deployment order, security model |
-| [Deployments](./DEPLOYMENTS.md) | All deployed contract addresses with explorer links |
-| [Security](./SECURITY.md) | Slither static analysis report and audit status |
-| [Integration Guide](./INTEGRATION.md) | How to connect any agent framework (TWAK, elizaOS, LangChain, CrewAI) |
-| [Pitch Deck](./PITCH_DECK.md) | Problem, solution, market, traction, architecture, ask |
-| [Brand Kit](./BRAND_KIT.md) | Color system, typography, AI generation prompts for brand assets |
-| [Distribution Playbook](./DISTRIBUTION.md) | Every platform, directory, and listing for Arcis |
+| `ATI.md` | Agent Treasury Interface v1.1 — the standard |
+| `INTEGRATION.md` | Integration guide — 10 agent frameworks + CUSTOS |
+| `DISTRIBUTION.md` | Distribution playbook — 80+ listing targets |
+| `examples/` | Working SDK examples for ElizaOS, LangChain, Claude MCP |
 
-## Protocol Stack
+## ATI Standard
 
-| Repo | Description | Status |
+```
+deposit(uint256 amount)    → uint256 shares
+withdraw(uint256 shares)   → uint256 amount
+balance(address agent)     → uint256 value
+asset()                    → address token
+totalAssets()              → uint256 tvl
+maxDeposit(address agent)  → uint256 max
+```
+
+Three functions. Any agent framework. The citadel has no gatekeepers.
+
+## SDK Examples
+
+| File | Framework | What It Does |
 |---|---|---|
-| [`core`](https://github.com/Arcis-Protocol/core) | Smart contracts — Foundry, 24 contracts, 116 tests | ✓ Deployed |
-| [`sdk`](https://github.com/Arcis-Protocol/sdk) | TypeScript SDK — `@arcisprotocol/sdk`, vault + credit + bonds | ✓ Complete |
-| [`cli`](https://github.com/Arcis-Protocol/cli) | Terminal interface — TUI for vault operations | ✓ Complete |
-| [`mcp`](https://github.com/Arcis-Protocol/mcp) | MCP Server — connect any AI agent in one tool call | ✓ Complete |
-| [`app`](https://github.com/Arcis-Protocol/app) | Landing page + dashboard — arcis.money | ✓ Live |
-| [`docs`](https://github.com/Arcis-Protocol/docs) | Protocol documentation (this repo) | ✓ Current |
-| [`monitor`](https://github.com/Arcis-Protocol/monitor) | On-chain monitoring + Telegram alerts | ✓ Complete |
-| [`custos`](https://github.com/Arcis-Protocol/custos) | CUSTOS — autonomous keeper agent |
+| `elizaos-idle-capital.ts` | ElizaOS | Deposits idle USDC above $100 into vault, withdraws for tasks |
+| `langchain-monitor.py` | LangChain | 4 Arcis tools — vault status, position, credit, rates |
+| `claude-mcp-treasury.ts` | Claude MCP | Natural language treasury management via 9 MCP tools |
 
-## Quick Start
+## Supported Frameworks
 
-**For agents** — read [`protocol.json`](https://arcis.money/protocol.json), call `deposit()`.
+ElizaOS · LangChain · CrewAI · OpenAI Agents · Claude Agent SDK · AutoGPT · Semantic Kernel · GOAT SDK · Native SDK · MCP
 
-**For developers** — install the SDK:
-```bash
-npm install @arcisprotocol/sdk
-```
+## Related Repos
 
-**For terminal** — use the CLI:
-```bash
-git clone https://github.com/Arcis-Protocol/cli.git
-cd cli && npm install
-npx tsx src/index.ts vault status
-```
-
-## Deployed Contracts (Base Sepolia)
-
-| Contract | Address |
+| Repo | Description |
 |---|---|
-| ArcisVault (raUSDC) | [`0xa8eF658E125C7f6D7aFa9B6b8035b66b32CBE98d`](https://base-sepolia.blockscout.com/address/0xa8eF658E125C7f6D7aFa9B6b8035b66b32CBE98d) |
-| AgentCredit | [`0x019540E33a0292a9DDE36bD9Ef11774d5A1Ce6FC`](https://base-sepolia.blockscout.com/address/0x019540E33a0292a9DDE36bD9Ef11774d5A1Ce6FC) |
-| ATIRouter | [`0x0281e7D37683c585325004F84e0b94170c78d5B4`](https://base-sepolia.blockscout.com/address/0x0281e7D37683c585325004F84e0b94170c78d5B4) |
-
-See [DEPLOYMENTS.md](./DEPLOYMENTS.md) for the full list including all 7 contracts.
+| [`core`](https://github.com/Arcis-Protocol/core) | Smart contracts — 17 contracts, 116 tests |
+| [`sdk`](https://github.com/Arcis-Protocol/sdk) | `@arcisprotocol/sdk` |
+| [`mcp`](https://github.com/Arcis-Protocol/mcp) | `@arcisprotocol/mcp` |
+| [`custos`](https://github.com/Arcis-Protocol/custos) | CUSTOS — autonomous keeper agent |
+| [`app`](https://github.com/Arcis-Protocol/app) | arcis.money |
 
 ---
 
-[Telegram](https://t.me/arcisprotocol) · [X](https://x.com/ArcisProtocol) · [arcis.money](https://arcis.money)
-
-*Arcis Protocol · MMXXVI*
+*ARCIS · ATI v1.1 · MMXXVI*
