@@ -12,10 +12,11 @@ Every step to go live on Base mainnet, in order, with dependencies.
   - This becomes the owner of all contracts
   - Cost: ~$1-2 in ETH gas
 
-- [ ] **Fund deployer wallet with ETH on Base mainnet**
-  - Send ~0.05 ETH to deployer address
+- [ ] **Fund deployer wallet with ETH on Base mainnet (OneKey hardware wallet)**
+  - Send ~0.05 ETH to your OneKey address on Base
   - Bridge from Ethereum via bridge.base.org or use Coinbase direct
-  - Deployer: `0xB390c9a4fB16389B6edd468f18AB2597bdf857db`
+  - **Use your OneKey hardware wallet as deployer — never use the testnet deployer for mainnet**
+  - The testnet deployer key is in chat history and should be considered compromised for real funds
 
 - [ ] **Audit decision**
   - Option A: Launch without audit, cap deposits at $10K, audit after traction
@@ -33,8 +34,10 @@ Base mainnet Aave V3 Pool: `0xA238Dd80C259a72e81d7e4664a9801593F98d1c5`
 - [ ] **Deploy ArcisVault**
   ```bash
   forge script script/Deploy.s.sol --rpc-url https://mainnet.base.org \
-    --broadcast --verify --etherscan-api-key $BASESCAN_KEY
+    --broadcast --verify --etherscan-api-key $BASESCAN_KEY \
+    --private-key <YOUR_ONEKEY_EXPORTED_KEY>
   ```
+  Or with interactive signing: `--interactive` flag
   - Constructor: USDC address, deposit cap ($100K initial), fee (100 bps), multisig, reserve ratio (1000 bps)
 
 - [ ] **Deploy StrategyAllocator**
