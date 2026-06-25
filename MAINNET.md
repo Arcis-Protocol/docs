@@ -6,16 +6,16 @@ Every step to go live on Base mainnet, in order, with dependencies.
 
 ## Phase 0: Pre-Deploy (do first)
 
-- [ ] **Owner wallet: OneKey hardware wallet**
-  - OneKey is the owner of all contracts (solo founder stage)
+- [ ] **Owner wallet: hardware wallet**
+  - hardware wallet is the owner of all contracts (solo founder stage)
   - No multisig needed until you have independent co-signers
   - Contract-level protections (24h strategy timelock, emergencyWithdraw) protect depositors
   - Migrate to multisig later via `transferOwnership()` when team grows
 
-- [ ] **Fund deployer wallet with ETH on Base mainnet (OneKey hardware wallet)**
-  - Send ~0.05 ETH to your OneKey address on Base
+- [ ] **Fund deployer wallet with ETH on Base mainnet (hardware wallet)**
+  - Send ~0.05 ETH to your hardware wallet address on Base
   - Bridge from Ethereum via bridge.base.org or use Coinbase direct
-  - **Use your OneKey hardware wallet as deployer — never use the testnet deployer for mainnet**
+  - **Use your hardware wallet as deployer — never use the testnet deployer for mainnet**
   - The testnet deployer key is in chat history and should be considered compromised for real funds
 
 - [ ] **Audit decision**
@@ -70,8 +70,8 @@ Base mainnet Aave V3 Pool: `0xA238Dd80C259a72e81d7e4664a9801593F98d1c5`
 ## Phase 2: Configuration
 
 - [ ] **Verify ownership on all contracts**
-  - ArcisVault, AgentCredit, StrategyAllocator: owner = your OneKey address
-  - Verify on Basescan: each contract's `owner()` returns your OneKey
+  - ArcisVault, AgentCredit, StrategyAllocator: owner = your deployer address
+  - Verify on Basescan: each contract's `owner()` returns your hardware wallet
   - Future: `transferOwnership(multisigAddress)` when team grows
 
 - [ ] **Set deposit cap** — start at $100K, increase after audit
@@ -212,7 +212,7 @@ Base mainnet Aave V3 Pool: `0xA238Dd80C259a72e81d7e4664a9801593F98d1c5`
 | Item | Cost | Timeline |
 |---|---|---|
 | ETH for deployment | ~$5-10 | Day 1 |
-| Owner: OneKey (no multisig) | $0 | Day 1 |
+| Owner: hardware wallet (no multisig) | $0 | Day 1 |
 | Railway (CUSTOS hosting) | $5/month | Day 1 |
 | Vercel (MCP hosting) | Free tier | Day 1 |
 | Domain (arcis.money) | Already owned | — |
