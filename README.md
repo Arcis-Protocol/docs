@@ -2,6 +2,8 @@
 
 Specifications, integration guides, and SDK examples for Arcis Protocol.
 
+**Status: Live on Base mainnet.**
+
 ## Contents
 
 | Document | Description |
