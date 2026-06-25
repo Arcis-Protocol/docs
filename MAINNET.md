@@ -6,11 +6,11 @@ Every step to go live on Base mainnet, in order, with dependencies.
 
 ## Phase 0: Pre-Deploy (do first)
 
-- [ ] **Create Safe multisig on Base mainnet**
-  - Go to app.safe.global → Create New Safe → Base network
-  - 2-of-3 signers minimum (you + 2 trusted addresses)
-  - This becomes the owner of all contracts
-  - Cost: ~$1-2 in ETH gas
+- [ ] **Owner wallet: OneKey hardware wallet**
+  - OneKey is the owner of all contracts (solo founder stage)
+  - No multisig needed until you have independent co-signers
+  - Contract-level protections (24h strategy timelock, emergencyWithdraw) protect depositors
+  - Migrate to multisig later via `transferOwnership()` when team grows
 
 - [ ] **Fund deployer wallet with ETH on Base mainnet (OneKey hardware wallet)**
   - Send ~0.05 ETH to your OneKey address on Base
@@ -69,11 +69,10 @@ Base mainnet Aave V3 Pool: `0xA238Dd80C259a72e81d7e4664a9801593F98d1c5`
 
 ## Phase 2: Configuration
 
-- [ ] **Transfer ownership to Safe multisig**
-  - ArcisVault: `transferOwnership(safeAddress)`
-  - AgentCredit: `transferOwnership(safeAddress)`
-  - StrategyAllocator: `transferOwnership(safeAddress)`
-  - Accept ownership from multisig for each
+- [ ] **Verify ownership on all contracts**
+  - ArcisVault, AgentCredit, StrategyAllocator: owner = your OneKey address
+  - Verify on Basescan: each contract's `owner()` returns your OneKey
+  - Future: `transferOwnership(multisigAddress)` when team grows
 
 - [ ] **Set deposit cap** — start at $100K, increase after audit
 - [ ] **Set per-agent cap** — $10K initial (prevents whale concentration)
@@ -213,7 +212,7 @@ Base mainnet Aave V3 Pool: `0xA238Dd80C259a72e81d7e4664a9801593F98d1c5`
 | Item | Cost | Timeline |
 |---|---|---|
 | ETH for deployment | ~$5-10 | Day 1 |
-| Safe multisig creation | ~$1-2 | Day 1 |
+| Owner: OneKey (no multisig) | $0 | Day 1 |
 | Railway (CUSTOS hosting) | $5/month | Day 1 |
 | Vercel (MCP hosting) | Free tier | Day 1 |
 | Domain (arcis.money) | Already owned | — |
