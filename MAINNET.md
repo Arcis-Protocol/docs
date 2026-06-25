@@ -6,13 +6,13 @@ Every step to go live on Base mainnet, in order, with dependencies.
 
 ## Phase 0: Pre-Deploy (do first)
 
-- [ ] **Owner wallet: hardware wallet**
+- [x] **Owner wallet: hardware wallet**
   - hardware wallet is the owner of all contracts (solo founder stage)
   - No multisig needed until you have independent co-signers
   - Contract-level protections (24h strategy timelock, emergencyWithdraw) protect depositors
   - Migrate to multisig later via `transferOwnership()` when team grows
 
-- [ ] **Fund deployer wallet with ETH on Base mainnet (hardware wallet)**
+- [x] **Fund deployer wallet with ETH on Base mainnet**
   - Send ~0.05 ETH to your hardware wallet address on Base
   - Bridge from Ethereum via bridge.base.org or use Coinbase direct
   - **Use your hardware wallet as deployer — never use the testnet deployer for mainnet**
@@ -31,7 +31,7 @@ Every step to go live on Base mainnet, in order, with dependencies.
 Base mainnet USDC: `0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913`
 Base mainnet Aave V3 Pool: `0xA238Dd80C259a72e81d7e4664a9801593F98d1c5`
 
-- [ ] **Deploy ArcisVault**
+- [x] **Deploy ArcisVault** — `0x00325d9da832b38179ed2f0dabd4062d93e325a7`
   ```bash
   forge script script/Deploy.s.sol --rpc-url https://mainnet.base.org \
     --broadcast --verify --etherscan-api-key $BASESCAN_KEY \
@@ -40,16 +40,16 @@ Base mainnet Aave V3 Pool: `0xA238Dd80C259a72e81d7e4664a9801593F98d1c5`
   Or with interactive signing: `--interactive` flag
   - Constructor: USDC address, deposit cap ($100K initial), fee (100 bps), multisig, reserve ratio (1000 bps)
 
-- [ ] **Deploy StrategyAllocator**
+- [x] **Deploy StrategyAllocator** — `0x7Fd5d7b49694858FCf143E0039e83cDB0196DD7A`
   - Constructor: vault address, 12-hour timelock
 
 - [ ] **Deploy AgentCredit**
   - Constructor: vault address, identity registry, base rate (500 bps), multisig
 
-- [ ] **Deploy ATIRouter**
+- [x] **Deploy ATIRouter** — `0xeC3b7Daa942C03651D55A4A01797498fA6dB728F`
   - Constructor: vault address, credit address
 
-- [ ] **Deploy StrategyAave**
+- [x] **Deploy StrategyAave** — `0x43626D6162Ccb12328B989BB228DaD2941F2F12a`
   - Constructor: vault address, Aave V3 Pool, USDC address
   - This is the first real yield source
 
@@ -84,13 +84,13 @@ Base mainnet Aave V3 Pool: `0xA238Dd80C259a72e81d7e4664a9801593F98d1c5`
 
 ## Phase 3: SDK / MCP / Dashboard Update
 
-- [ ] **Update SDK addresses**
+- [x] **Update SDK addresses** — mainnet in source
   - Edit `src/addresses.ts` with mainnet contract addresses
   - Add chain detection (Base mainnet vs Base Sepolia)
   - Bump version to 0.4.0
   - `npm publish --access public`
 
-- [ ] **Update MCP addresses**
+- [x] **Update MCP addresses** — mainnet in source
   - Edit route.ts and server.ts with mainnet addresses
   - Add CHAIN_ID env var for mainnet/testnet switching
   - Bump to 0.3.0
@@ -101,13 +101,13 @@ Base mainnet Aave V3 Pool: `0xA238Dd80C259a72e81d7e4664a9801593F98d1c5`
   - Set env vars for mainnet
   - Add as Claude.ai custom connector
 
-- [ ] **Update Dashboard**
+- [x] **Update Dashboard** — mainnet addresses, RPC, chain ID
   - Switch RPC to Base mainnet (`https://mainnet.base.org`)
   - Update all contract addresses
   - Remove "Base Sepolia" testnet labels
   - Add mainnet badge
 
-- [ ] **Update Landing Page**
+- [x] **Update Landing Page** — mainnet references
   - Remove any testnet references
   - Update architecture diagram if needed
   - Ensure all links point to mainnet explorer
