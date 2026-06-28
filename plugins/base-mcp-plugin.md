@@ -24,7 +24,7 @@ This plugin prepares unsigned calldata for Arcis vault operations, then executes
 | Contract | Address |
 |---|---|
 | ArcisVault (raUSDC) | `0x00325d9da832b38179ed2f0dabd4062d93e325a7` |
-| AgentCredit | `0x019540E33a0292a9DDE36bD9Ef11774d5A1Ce6FC` |
+| AgentCredit | `0xdf31800e620f728297340d66acf5a306f07ce7a1` |
 | ATIRouter | `0xeC3b7Daa942C03651D55A4A01797498fA6dB728F` |
 | USDC | `0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913` |
 
