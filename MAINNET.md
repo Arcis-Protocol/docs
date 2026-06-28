@@ -46,7 +46,7 @@ Base mainnet Aave V3 Pool: `0xA238Dd80C259a72e81d7e4664a9801593F98d1c5`
 - [ ] **Deploy AgentCredit**
   - Constructor: vault address, identity registry, base rate (500 bps), multisig
 
-- [x] **Deploy ATIRouter** — `0xeC3b7Daa942C03651D55A4A01797498fA6dB728F`
+- [x] **Deploy ATIRouter** — `0xd0c64f997ca9aa427f8834578bd7f0313f868e83`
   - Constructor: vault address, credit address
 
 - [x] **Deploy StrategyAave** — `0x43626D6162Ccb12328B989BB228DaD2941F2F12a`
