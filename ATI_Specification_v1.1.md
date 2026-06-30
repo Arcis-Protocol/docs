@@ -242,7 +242,7 @@ The initial vault deploys a conservative allocation:
 
 | Strategy | Allocation | Target APY | Risk |
 |----------|-----------|-----------|------|
-| Tokenized US Treasuries (Ondo USDY) | 40% | 4.5% | Low |
+| Reserved — additional strategies | — | — | — |
 | Aave USDC lending (Base) | 30% | 3-5% | Low |
 | Morpho optimized lending | 20% | 4-7% | Low-Med |
 | Stable LP reserve (instant liquidity) | 10% | 2-3% | Low |
