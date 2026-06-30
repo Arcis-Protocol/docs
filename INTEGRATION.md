@@ -35,16 +35,16 @@ Any agent with HTTP access can interact with the ATI using JSON-RPC. No SDK requ
 
 ```bash
 # Check vault health
-cast call 0xa8eF658E125C7f6D7aFa9B6b8035b66b32CBE98d "totalAssets()" --rpc-url https://sepolia.base.org
+cast call 0x00325d9da832b38179ed2f0dabd4062d93e325a7 "totalAssets()" --rpc-url https://mainnet.base.org
 
 # Discover the deposit token
-cast call 0xa8eF658E125C7f6D7aFa9B6b8035b66b32CBE98d "asset()" --rpc-url https://sepolia.base.org
+cast call 0x00325d9da832b38179ed2f0dabd4062d93e325a7 "asset()" --rpc-url https://mainnet.base.org
 
 # Check capacity
-cast call 0xa8eF658E125C7f6D7aFa9B6b8035b66b32CBE98d "maxDeposit(address)" 0xYourAgent --rpc-url https://sepolia.base.org
+cast call 0x00325d9da832b38179ed2f0dabd4062d93e325a7 "maxDeposit(address)" 0xYourAgent --rpc-url https://mainnet.base.org
 
 # Deposit 1000 USDC (after approval)
-cast send 0xa8eF658E125C7f6D7aFa9B6b8035b66b32CBE98d "deposit(uint256)" 1000000000 --private-key $KEY --rpc-url https://sepolia.base.org
+cast send 0x00325d9da832b38179ed2f0dabd4062d93e325a7 "deposit(uint256)" 1000000000 --private-key $KEY --rpc-url https://mainnet.base.org
 ```
 
 ---
@@ -62,12 +62,12 @@ npm install @arcisprotocol/sdk viem
 ```typescript
 import { Arcis, parseUSDC, formatUSDC } from "@arcisprotocol/sdk";
 import { createPublicClient, createWalletClient, http } from "viem";
-import { baseSepolia } from "viem/chains";
+import { base } from "viem/chains";
 import { privateKeyToAccount } from "viem/accounts";
 
 const account = privateKeyToAccount("0x...");
-const pub = createPublicClient({ chain: baseSepolia, transport: http() });
-const wall = createWalletClient({ chain: baseSepolia, transport: http(), account });
+const pub = createPublicClient({ chain: base, transport: http() });
+const wall = createWalletClient({ chain: base, transport: http(), account });
 
 const arcis = new Arcis(pub, wall);
 
@@ -123,7 +123,7 @@ PORT=3001 node dist/remote.js
 // actions/arcis-deposit.ts
 import { parseUSDC } from "@arcisprotocol/sdk";
 
-const VAULT = "0xa8eF658E125C7f6D7aFa9B6b8035b66b32CBE98d";
+const VAULT = "0x00325d9da832b38179ed2f0dabd4062d93e325a7";
 
 export const arcisDeposit = {
   name: "ARCIS_DEPOSIT",
@@ -157,8 +157,8 @@ export const arcisDeposit = {
 from langchain.tools import tool
 from web3 import Web3
 
-w3 = Web3(Web3.HTTPProvider("https://sepolia.base.org"))
-VAULT = "0xa8eF658E125C7f6D7aFa9B6b8035b66b32CBE98d"
+w3 = Web3(Web3.HTTPProvider("https://mainnet.base.org"))
+VAULT = "0x00325d9da832b38179ed2f0dabd4062d93e325a7"
 
 ATI_ABI = [
     {"name": "deposit",     "type": "function", "inputs": [{"type": "uint256"}], "outputs": [{"type": "uint256"}], "stateMutability": "nonpayable"},
@@ -295,12 +295,12 @@ Returns contract addresses, ABIs, function selectors, and example RPC calls. No 
 
 ---
 
-## Deployed Contracts (Base Sepolia)
+## Deployed Contracts (Base Mainnet)
 
 | Contract | Address |
 |---|---|
-| ArcisVault (raUSDC) | `0xa8eF658E125C7f6D7aFa9B6b8035b66b32CBE98d` |
-| AgentCredit | `0x019540E33a0292a9DDE36bD9Ef11774d5A1Ce6FC` |
+| ArcisVault (raUSDC) | `0x00325d9da832b38179ed2f0dabd4062d93e325a7` |
+| AgentCredit | `0xdf31800e620f728297340d66acf5a306f07ce7a1` |
 | ATIRouter | `0x0281e7D37683c585325004F84e0b94170c78d5B4` |
 | MockUSDC | `0x29440A12f15fe6bDf5F624f4eeEB298CCb782f05` |
 

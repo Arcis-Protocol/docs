@@ -5,7 +5,7 @@
 ## Slides
 
 1. **Cover** — ARCIS · The citadel of agent capital · Base Mainnet · DeFiLlama Listed
-2. **The Problem** — 69K+ agents, $0 earning yield, no agent-native financial infrastructure
+2. **The Problem** — 104K+ agents, $0 earning yield, no agent-native financial infrastructure
 3. **The Solution** — Yield Vaults + Credit Lines + Revenue Bonds, one ATI standard
 4. **ATI Standard** — deposit(), withdraw(), balance() — works with 8+ agent frameworks
 5. **The Market** — $27.6B tokenized assets, competitive landscape vs Virtuals/x402/Aave

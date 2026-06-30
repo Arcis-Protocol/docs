@@ -124,7 +124,6 @@ Organized by category with submission URLs, priority, and status.
 
 | Platform | URL | Priority | Notes |
 |---|---|---|---|
-| RWA.xyz | https://rwa.xyz | High | Tokenized RWA tracker — list Ondo USDY integration |
 | Centrifuge | https://centrifuge.io | Medium | RWA protocol ecosystem |
 | Backed.fi | https://backed.fi | Low | Tokenized securities |
 | Maple Finance | https://maple.finance | Medium | Institutional lending |
@@ -140,7 +139,6 @@ Organized by category with submission URLs, priority, and status.
 | Gitcoin Grants | https://grants.gitcoin.co | High | Community funding rounds |
 | Aave Grants | https://aavegrants.org | Medium | Integration with Aave strategy |
 | Morpho Grants | Contact Morpho team | Medium | Integration with Morpho strategy |
-| Ondo Grants | Contact Ondo team | Medium | Integration with Ondo USDY |
 | EF Grants | https://ethereum.org/en/community/grants | Medium | Ethereum Foundation |
 
 ---
