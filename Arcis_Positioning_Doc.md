@@ -21,7 +21,7 @@ RWA gave humans tokenized access to real-world assets. Arcis gives agents tokeni
 
 ## The Problem
 
-AI agents are now economic actors. They hold wallets, sign transactions, pay for compute, settle invoices, and manage portfolios. By Q1 2026, agent wallets account for 8-12% of total DeFi transaction volume. Coinbase launched Agentic Wallets in February 2026. The x402 protocol has 69,000 active agents processing 165 million transactions. Shopify launched Agentic Storefronts. This is no longer speculative.
+AI agents are now economic actors. They hold wallets, sign transactions, pay for compute, settle invoices, and manage portfolios. By Q1 2026, agent wallets account for 8-12% of total DeFi transaction volume. Coinbase launched Agentic Wallets in February 2026. The x402 protocol has 104,000+ active agents processing 165 million transactions. Shopify launched Agentic Storefronts. This is no longer speculative.
 
 But there is a structural gap. Agents generate revenue and spend money, yet the financial instruments available to them were all designed for humans.
 
@@ -69,7 +69,7 @@ Arcis is a protocol that issues agent-native financial instruments on Base and S
 Yield-bearing wrappers around existing DeFi primitives and tokenized RWAs. An agent deposits USDC and receives raUSDC (Real Agent USDC), a yield-bearing position token that auto-routes capital across the highest-yielding stablecoin strategies.
 
 Under the hood, the vault allocates across:
-- Tokenized US Treasuries (Ondo USDY, BlackRock BUIDL)
+- Aave V3 yield + future multi-strategy (Morpho, additional protocols)
 - DeFi lending protocols (Aave, Morpho, Kamino on Solana)
 - Liquidity provision on stable pairs
 
@@ -131,7 +131,7 @@ A Virtuals agent could use Arcis vaults to manage its treasury. A Virtuals agent
 Three revenue streams with conservative sizing:
 
 **Agent Vaults (AUM fees)**
-69,000 active agents on x402 alone. Average agent operational capital estimated at $5K-$50K. If Arcis captures 10% of agent capital in Year 1 at an average of $10K per agent, that is $69M AUM. At 50bps management fee plus yield spread, that is roughly $500K-$1M annual protocol revenue in Year 1. By Year 3, as agent populations scale to 500K+ and average capital increases, the addressable AUM is in the billions.
+104,000+ active agents on x402 alone. Average agent operational capital estimated at $5K-$50K. If Arcis captures 10% of agent capital in Year 1 at an average of $10K per agent, that is $104M AUM. At 50bps management fee plus yield spread, that is roughly $500K-$1M annual protocol revenue in Year 1. By Year 3, as agent populations scale to 500K+ and average capital increases, the addressable AUM is in the billions.
 
 **Agent Credit (interest spread)**
 Agents that borrow against their positions pay interest. Protocol takes a spread. Even at modest utilization rates, the credit market scales with vault AUM.
@@ -201,7 +201,7 @@ Settlement:
 
 ### Phase 1: Agent Vaults (Months 1-3)
 
-Ship the vault product. One vault: raUSDC on Base. Simple yield strategy (Aave + Ondo USDY allocation). Publish the ATI spec as an open standard. Integrate with elizaOS and Virtuals agents first. Target: $5M AUM in 90 days.
+Ship the vault product. One vault: raUSDC on Base. Simple yield strategy (Aave V3 allocation). Publish the ATI spec as an open standard. Integrate with elizaOS and Virtuals agents first. Target: $5M AUM in 90 days.
 
 Distribution: Go direct to agent builders. Virtuals Protocol creators, elizaOS developers, DeFAI projects on Base. The pitch is simple: your agent is holding idle USDC, plug in Arcis and it earns 4-6% APY with one function call.
 

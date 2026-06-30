@@ -133,7 +133,7 @@ pub enum ATIError {
 ### TypeScript SDK (Agent Framework Integration)
 
 ```typescript
-// @arcis/sdk - Agent Treasury Interface SDK
+// @arcisprotocol/sdk - Agent Treasury Interface SDK
 // For elizaOS, LangChain, CrewAI, AutoGPT, and any agent framework
 
 interface ATIConfig {
@@ -179,7 +179,7 @@ interface ATIClient {
 }
 
 // Usage example
-import { createATIClient } from '@arcis/sdk';
+import { createATIClient } from '@arcisprotocol/sdk';
 
 const treasury = createATIClient({
   chain: 'base',
@@ -242,7 +242,7 @@ The initial vault deploys a conservative allocation:
 
 | Strategy | Allocation | Target APY | Risk |
 |----------|-----------|-----------|------|
-| Tokenized US Treasuries (Ondo USDY) | 40% | 4.5% | Low |
+| Reserved — additional strategies | — | — | — |
 | Aave USDC lending (Base) | 30% | 3-5% | Low |
 | Morpho optimized lending | 20% | 4-7% | Low-Med |
 | Stable LP reserve (instant liquidity) | 10% | 2-3% | Low |

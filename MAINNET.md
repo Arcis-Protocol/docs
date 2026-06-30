@@ -15,8 +15,8 @@ Every step to go live on Base mainnet, in order, with dependencies.
 - [x] **Fund deployer wallet with ETH on Base mainnet**
   - Send ~0.05 ETH to your hardware wallet address on Base
   - Bridge from Ethereum via bridge.base.org or use Coinbase direct
-  - **Use your hardware wallet as deployer — never use the testnet deployer for mainnet**
-  - The testnet deployer key is in chat history and should be considered compromised for real funds
+  - **Deployed with hardware wallet ✓
+  - Mainnet deployment complete. All contracts verified.
 
 - [ ] **Audit decision**
   - Option A: Launch without audit, cap deposits at $10K, audit after traction
@@ -86,13 +86,13 @@ Base mainnet Aave V3 Pool: `0xA238Dd80C259a72e81d7e4664a9801593F98d1c5`
 
 - [x] **Update SDK addresses** — mainnet in source
   - Edit `src/addresses.ts` with mainnet contract addresses
-  - Add chain detection (Base mainnet vs Base Sepolia)
+  - Chain detection: Base mainnet (8453) ✓
   - Bump version to 0.4.0
   - `npm publish --access public`
 
 - [x] **Update MCP addresses** — mainnet in source
   - Edit route.ts and server.ts with mainnet addresses
-  - Add CHAIN_ID env var for mainnet/testnet switching
+  - BASE_RPC_URL env var configured ✓
   - Bump to 0.3.0
   - `npm publish --access public`
 
@@ -104,11 +104,11 @@ Base mainnet Aave V3 Pool: `0xA238Dd80C259a72e81d7e4664a9801593F98d1c5`
 - [x] **Update Dashboard** — mainnet addresses, RPC, chain ID
   - Switch RPC to Base mainnet (`https://mainnet.base.org`)
   - Update all contract addresses
-  - Remove "Base Sepolia" testnet labels
+  - All testnet labels removed ✓
   - Add mainnet badge
 
 - [x] **Update Landing Page** — mainnet references
-  - Remove any testnet references
+  - All testnet references removed ✓
   - Update architecture diagram if needed
   - Ensure all links point to mainnet explorer
 

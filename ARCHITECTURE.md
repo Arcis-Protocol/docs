@@ -28,7 +28,7 @@
       ▼              ▼             ▼               ▼
 ┌──────────────────────────────────────────────────────────┐
 │                   YIELD SOURCES                           │
-│  Aave V3  ·  Morpho  ·  Ondo USDY  ·  Stable LP         │
+│  Aave V3  ·  Morpho  ·  Future Strategies  ·  Stable LP         │
 └──────────────────────────────────────────────────────────┘
 ```
 
@@ -64,7 +64,7 @@
 | ATIRouter.sol | Single-call entry point for agents |
 | StrategyAave.sol | Aave V3 adapter |
 | StrategyMorpho.sol | Morpho adapter |
-| StrategyOndoUSDY.sol | Ondo USDY adapter |
+| StrategyOndoUSDY.sol | Future Strategies adapter |
 
 ### Libraries (src/libraries/)
 | Library | Purpose |
