@@ -1,0 +1,520 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Arcis Protocol — Agent Treasury Interface",
+    "description": "Financial infrastructure for autonomous AI agents on Base mainnet. Yield-bearing vaults (raUSDC), identity-aware credit lines (ERC-8004), and revenue bonds — accessible through the Agent Treasury Interface (ATI). MCP server endpoint: https://mcp-production-8219.up.railway.app/mcp",
+    "version": "1.0.0",
+    "contact": {
+      "name": "Arcis Protocol",
+      "url": "https://arcis.money",
+      "email": "dev@arcis.money"
+    },
+    "license": {
+      "name": "MIT",
+      "url": "https://github.com/Arcis-Protocol/core/blob/main/LICENSE"
+    },
+    "x-logo": {
+      "url": "https://arcis.money/arcis-icon.png"
+    }
+  },
+  "externalDocs": {
+    "description": "Integration Guide",
+    "url": "https://github.com/Arcis-Protocol/docs/blob/main/INTEGRATION.md"
+  },
+  "servers": [
+    {
+      "url": "https://mcp-production-8219.up.railway.app",
+      "description": "Production MCP Server (Base Mainnet)"
+    },
+    {
+      "url": "https://mainnet.base.org",
+      "description": "Base Mainnet RPC (direct contract calls)"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Vault",
+      "description": "ArcisVault (raUSDC) — ERC-4626 yield vault operations"
+    },
+    {
+      "name": "Credit",
+      "description": "AgentCredit — Identity-aware lending with ERC-8004 reputation tiers"
+    },
+    {
+      "name": "Contracts",
+      "description": "Protocol contract addresses and metadata"
+    }
+  ],
+  "paths": {
+    "/mcp/tools/arcis_vault_status": {
+      "post": {
+        "tags": ["Vault"],
+        "summary": "Get vault status",
+        "description": "Returns the current state of the ArcisVault including TVL, exchange rate, raUSDC supply, deposit capacity, reserve/deployed split, and pause status.",
+        "operationId": "arcis_vault_status",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Vault status retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VaultStatus"
+                },
+                "example": {
+                  "tvl": "$100.00",
+                  "raUSDC_supply": "100 shares",
+                  "exchange_rate": "1.000000",
+                  "deposit_cap": "$1,000,000.00",
+                  "remaining_capacity": "$999,900.00",
+                  "utilization": "0.01%",
+                  "reserve": "$100.00",
+                  "deployed": "$0.00",
+                  "paused": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mcp/tools/arcis_vault_balance": {
+      "post": {
+        "tags": ["Vault"],
+        "summary": "Get agent vault position",
+        "description": "Returns an agent's raUSDC share balance, position value in USDC, and wallet USDC balance.",
+        "operationId": "arcis_vault_balance",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["agent_address"],
+                "properties": {
+                  "agent_address": {
+                    "type": "string",
+                    "description": "Agent wallet address (0x...)",
+                    "example": "0xbae3fd2d46520ee76d53bf09abf42eb7b9ec6944"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Agent balance retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AgentBalance"
+                },
+                "example": {
+                  "agent": "0xbae3fd2d46520ee76d53bf09abf42eb7b9ec6944",
+                  "raUSDC_shares": 100,
+                  "position_value": "$100.00",
+                  "usdc_wallet": "$2.50"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mcp/tools/arcis_preview_deposit": {
+      "post": {
+        "tags": ["Vault"],
+        "summary": "Preview deposit",
+        "description": "Simulates a deposit and returns the number of raUSDC shares the agent would receive.",
+        "operationId": "arcis_preview_deposit",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["amount"],
+                "properties": {
+                  "amount": {
+                    "type": "string",
+                    "description": "USDC amount to deposit (human readable, e.g. '100' for $100)",
+                    "example": "100"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Deposit preview calculated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DepositPreview"
+                },
+                "example": {
+                  "deposit_amount": "$100.00",
+                  "shares_received": 100,
+                  "exchange_rate": "1.000000"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mcp/tools/arcis_credit_status": {
+      "post": {
+        "tags": ["Credit"],
+        "summary": "Get credit pool status",
+        "description": "Returns the current state of the AgentCredit lending pool including pool size, total borrowed, utilization, base rate, and active loan count.",
+        "operationId": "arcis_credit_status",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Credit status retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreditStatus"
+                },
+                "example": {
+                  "pool": "$0.00",
+                  "borrowed": "$0.00",
+                  "utilization": "0%",
+                  "base_rate": "5% APR",
+                  "active_loans": 0
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mcp/tools/arcis_credit_tiers": {
+      "post": {
+        "tags": ["Credit"],
+        "summary": "Get ERC-8004 reputation tiers",
+        "description": "Returns all 5 reputation tiers with their collateral requirements and rate discounts. Tiers are determined by the IdentityRegistry score (0-100).",
+        "operationId": "arcis_credit_tiers",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Credit tiers retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreditTiers"
+                },
+                "example": {
+                  "tiers": [
+                    { "tier": 0, "name": "Unverified", "collateral": "200%", "discount": "0%" },
+                    { "tier": 1, "name": "Basic", "collateral": "175%", "discount": "-1%" },
+                    { "tier": 2, "name": "Established", "collateral": "150%", "discount": "-2%" },
+                    { "tier": 3, "name": "Trusted", "collateral": "130%", "discount": "-3.5%" },
+                    { "tier": 4, "name": "Elite", "collateral": "115%", "discount": "-5%" }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mcp/tools/arcis_credit_health": {
+      "post": {
+        "tags": ["Credit"],
+        "summary": "Check loan health",
+        "description": "Returns the health factor and liquidation risk for an agent's active credit line.",
+        "operationId": "arcis_credit_health",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["agent_address"],
+                "properties": {
+                  "agent_address": {
+                    "type": "string",
+                    "description": "Agent wallet address (0x...)",
+                    "example": "0xbae3fd2d46520ee76d53bf09abf42eb7b9ec6944"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Credit health retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreditHealth"
+                },
+                "example": {
+                  "agent": "0xbae3fd2d46520ee76d53bf09abf42eb7b9ec6944",
+                  "health_factor": "N/A",
+                  "status": "No active loan"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mcp/tools/arcis_contracts": {
+      "post": {
+        "tags": ["Contracts"],
+        "summary": "Get deployed contract addresses",
+        "description": "Returns all 7 deployed Arcis Protocol contract addresses on Base mainnet.",
+        "operationId": "arcis_contracts",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Contract addresses retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Contracts"
+                },
+                "example": {
+                  "chain": "Base Mainnet (8453)",
+                  "contracts": {
+                    "ArcisVault": "0x00325d9da832b38179ed2f0dabd4062d93e325a7",
+                    "AgentCredit": "0xdf31800e620f728297340d66acf5a306f07ce7a1",
+                    "RevenueBondFactory": "0xeb65d8bb08e0ea4a6bb9162d53d1b444f99681ba",
+                    "IdentityRegistry": "0xaa4da295dd368c0f10128654af76e3f002e20e71",
+                    "ATIRouter": "0xd0c64f997ca9aa427f8834578bd7f0313f868e83",
+                    "StrategyAave": "0x43626D6162Ccb12328B989BB228DaD2941F2F12a",
+                    "StrategyAllocator": "0x7Fd5d7b49694858FCf143E0039e83cDB0196DD7A"
+                  },
+                  "usdc": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/contracts/vault/deposit": {
+      "post": {
+        "tags": ["Vault"],
+        "summary": "Deposit USDC into vault (on-chain)",
+        "description": "Deposits USDC into the ArcisVault and receives raUSDC shares. Requires two on-chain transactions: (1) USDC.approve(vault, amount) and (2) ArcisVault.deposit(amount). This is an on-chain operation — the agent must sign with their private key.",
+        "operationId": "deposit",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["amount"],
+                "properties": {
+                  "amount": {
+                    "type": "integer",
+                    "description": "USDC amount in raw units (6 decimals). $100 = 100000000",
+                    "example": 100000000
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Deposit transaction calldata",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "approve": {
+                      "type": "object",
+                      "properties": {
+                        "to": { "type": "string", "example": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913" },
+                        "data": { "type": "string", "example": "0x095ea7b3..." },
+                        "value": { "type": "string", "example": "0x0" }
+                      }
+                    },
+                    "deposit": {
+                      "type": "object",
+                      "properties": {
+                        "to": { "type": "string", "example": "0x00325d9da832b38179ed2f0dabd4062d93e325a7" },
+                        "data": { "type": "string", "example": "0xb6b55f25..." },
+                        "value": { "type": "string", "example": "0x0" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/contracts/vault/withdraw": {
+      "post": {
+        "tags": ["Vault"],
+        "summary": "Withdraw from vault (on-chain)",
+        "description": "Redeems raUSDC shares for USDC plus accrued yield. On-chain operation — agent must sign the transaction.",
+        "operationId": "withdraw",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["shares"],
+                "properties": {
+                  "shares": {
+                    "type": "integer",
+                    "description": "Number of raUSDC shares to redeem",
+                    "example": 100
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Withdraw transaction calldata",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "to": { "type": "string", "example": "0x00325d9da832b38179ed2f0dabd4062d93e325a7" },
+                    "data": { "type": "string", "example": "0x2e1a7d4d..." },
+                    "value": { "type": "string", "example": "0x0" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "VaultStatus": {
+        "type": "object",
+        "properties": {
+          "tvl": { "type": "string", "description": "Total Value Locked in USDC" },
+          "raUSDC_supply": { "type": "string", "description": "Total raUSDC shares outstanding" },
+          "exchange_rate": { "type": "string", "description": "USDC per raUSDC share" },
+          "deposit_cap": { "type": "string", "description": "Maximum vault capacity" },
+          "remaining_capacity": { "type": "string", "description": "Available deposit room" },
+          "utilization": { "type": "string", "description": "Percentage of cap used" },
+          "reserve": { "type": "string", "description": "Liquid USDC in vault" },
+          "deployed": { "type": "string", "description": "USDC deployed to yield strategies" },
+          "paused": { "type": "boolean", "description": "Whether vault is paused" }
+        }
+      },
+      "AgentBalance": {
+        "type": "object",
+        "properties": {
+          "agent": { "type": "string", "description": "Agent wallet address" },
+          "raUSDC_shares": { "type": "integer", "description": "Raw share count" },
+          "position_value": { "type": "string", "description": "Position value in USDC" },
+          "usdc_wallet": { "type": "string", "description": "Agent's USDC wallet balance" }
+        }
+      },
+      "DepositPreview": {
+        "type": "object",
+        "properties": {
+          "deposit_amount": { "type": "string" },
+          "shares_received": { "type": "integer" },
+          "exchange_rate": { "type": "string" }
+        }
+      },
+      "CreditStatus": {
+        "type": "object",
+        "properties": {
+          "pool": { "type": "string", "description": "Lending pool size in USDC" },
+          "borrowed": { "type": "string", "description": "Total borrowed in USDC" },
+          "utilization": { "type": "string", "description": "Pool utilization percentage" },
+          "base_rate": { "type": "string", "description": "Base borrow rate" },
+          "active_loans": { "type": "integer", "description": "Number of active loans" }
+        }
+      },
+      "CreditTiers": {
+        "type": "object",
+        "properties": {
+          "tiers": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "tier": { "type": "integer" },
+                "name": { "type": "string" },
+                "collateral": { "type": "string" },
+                "discount": { "type": "string" }
+              }
+            }
+          }
+        }
+      },
+      "CreditHealth": {
+        "type": "object",
+        "properties": {
+          "agent": { "type": "string" },
+          "health_factor": { "type": "string" },
+          "status": { "type": "string" }
+        }
+      },
+      "Contracts": {
+        "type": "object",
+        "properties": {
+          "chain": { "type": "string" },
+          "contracts": {
+            "type": "object",
+            "additionalProperties": { "type": "string" }
+          },
+          "usdc": { "type": "string" }
+        }
+      }
+    }
+  }
+}
