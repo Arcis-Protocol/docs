@@ -44,6 +44,10 @@ const manager = createIdleCapitalManager({
 | `intervalMs` | 60s | Check interval |
 | `autoMode` | true | Auto deposit/withdraw on interval |
 
+### Payment Rail Integrations
+
+- **`xpay-idle-capital.ts`** — XPay (x402 facilitator) + Arcis. Agents earn USDC through XPay payments, idle capital auto-compounds in Arcis, auto-withdraws for the next payment. XPay = payment layer, Arcis = treasury layer.
+
 ### Other Examples
 
 - **`elizaos-idle-capital.ts`** — ElizaOS-specific plugin
