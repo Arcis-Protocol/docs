@@ -22,3 +22,8 @@
 ## File
 
 `Arcis_Pitch_Deck_v3.pptx` — dark obsidian background, gold accents, Cambria + Calibri typography.
+
+## Token
+
+$CUSTOS — Virtuals Protocol agent token on Base
+Contract: `0xD7C479F720b0bC2FF1088A16D1c06C3e11C62882`
