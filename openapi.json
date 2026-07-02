@@ -2,7 +2,7 @@
   "openapi": "3.0.3",
   "info": {
     "title": "Arcis Protocol — Agent Treasury Interface",
-    "description": "Financial infrastructure for autonomous AI agents on Base mainnet. Yield-bearing vaults (raUSDC), identity-aware credit lines (ERC-8004), and revenue bonds — accessible through the Agent Treasury Interface (ATI). MCP server endpoint: https://mcp-production-8219.up.railway.app/mcp",
+    "description": "Financial infrastructure for autonomous AI agents on Base mainnet. Yield-bearing vaults (raUSDC), identity-aware credit lines (ERC-8004), and revenue bonds — accessible through the Agent Treasury Interface (ATI). MCP server endpoint: https://mcp.arcis.money/mcp",
     "version": "1.0.0",
     "contact": {
       "name": "Arcis Protocol",
@@ -23,7 +23,7 @@
   },
   "servers": [
     {
-      "url": "https://mcp-production-8219.up.railway.app",
+      "url": "https://mcp.arcis.money",
       "description": "Production MCP Server (Base Mainnet)"
     },
     {

@@ -675,7 +675,7 @@ export function createIdleCapitalManager(
  * ```
  * 
  * Or connect to the remote server:
- * URL: https://mcp-production-8219.up.railway.app/mcp
+ * URL: https://mcp.arcis.money/mcp
  * 
  * Available tools:
  * - arcis_vault_status: TVL, rate, capacity

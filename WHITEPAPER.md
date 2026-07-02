@@ -206,7 +206,7 @@ CUSTOS is tokenized on Virtuals Protocol on Base. The $CUSTOS token represents o
 
 Arcis provides an MCP server that enables any MCP-compatible AI assistant (Claude, ChatGPT, Cursor, Codex) to interact with the protocol through natural language.
 
-**Endpoint:** `https://mcp-production-8219.up.railway.app/mcp`
+**Endpoint:** `https://mcp.arcis.money/mcp`
 **npm:** `@arcisprotocol/mcp`
 
 ### 6.2 Available Tools
@@ -335,7 +335,7 @@ Agent-to-agent credit markets. Multi-chain ATI standard. $100M+ TVL target. CUST
 - Dashboard: https://arcis.money/dashboard
 - GitHub: https://github.com/Arcis-Protocol
 - DeFiLlama: https://defillama.com/protocol/arcis-protocol
-- MCP Server: https://mcp-production-8219.up.railway.app/mcp
+- MCP Server: https://mcp.arcis.money/mcp
 - X (Protocol): https://x.com/ArcisProtocol
 - X (CUSTOS): https://x.com/custos0x
 - SDK: npm install @arcisprotocol/sdk

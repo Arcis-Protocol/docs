@@ -31,7 +31,7 @@ const manager = createIdleCapitalManager({
 | OpenAI Agents | Function tool |
 | Claude Agent SDK | MCP tool |
 | AutoGPT | Plugin |
-| Any MCP client | Connect to `mcp-production-8219.up.railway.app/mcp` |
+| Any MCP client | Connect to `mcp.arcis.money/mcp` |
 
 ### Config Options
 
@@ -67,5 +67,5 @@ const manager = createIdleCapitalManager({
 
 - [arcis.money](https://arcis.money)
 - [Dashboard](https://arcis.money/dashboard)
-- [MCP Server](https://mcp-production-8219.up.railway.app/mcp)
+- [MCP Server](https://mcp.arcis.money/mcp)
 - [DeFiLlama](https://defillama.com/protocol/arcis-protocol)

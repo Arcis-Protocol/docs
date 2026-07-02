@@ -193,7 +193,7 @@ For AI agents that use MCP natively:
 }
 ```
 
-Remote endpoint: `https://mcp-production-8219.up.railway.app/mcp`
+Remote endpoint: `https://mcp.arcis.money/mcp`
 
 npm: `@arcisprotocol/mcp`
 
